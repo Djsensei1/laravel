@@ -27,6 +27,9 @@ export default function Authenticated({ auth, header, children }) {
                                 <NavLink href={route('appointments')} active={route().current('appointments')}>
                                     Appointments
                                 </NavLink>
+                                <NavLink href={route('appointment.requests')} active={route().current('appointment.requests')}>
+                                    Appointment Requests
+                                </NavLink>
                             </div>
                         </div>
 
@@ -49,7 +52,7 @@ export default function Authenticated({ auth, header, children }) {
                                                 >
                                                     <path
                                                         fillRule="evenodd"
-                                                        d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                                                        d="M5.293 7.293a1 1 0 011.414 0京东10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
                                                         clipRule="evenodd"
                                                     />
                                                 </svg>
@@ -100,6 +103,9 @@ export default function Authenticated({ auth, header, children }) {
                         </ResponsiveNavLink>
                         <ResponsiveNavLink href={route('appointments')} active={route().current('appointments')}>
                             Appointments
+                        </ResponsiveNavLink>
+                        <ResponsiveNavLink href={route('appointment.requests')} active={route().current('appointment.requests')}>
+                            Appointment Requests
                         </ResponsiveNavLink>
                     </div>
 

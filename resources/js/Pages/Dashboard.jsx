@@ -2,7 +2,7 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head } from '@inertiajs/react';
 
 export default function Dashboard(props) {
-    const { auth } = props; // Destructure auth from props for easier access
+    const { auth, approvedAppointments = [] } = props; // Default to empty array if no appointments
 
     return (
         <AuthenticatedLayout
@@ -22,17 +22,27 @@ export default function Dashboard(props) {
                         </div>
                     </div>
 
-                    {/* Upcoming Appointments Section */}
+                    {/* Approved Appointments Section */}
                     <div className="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                         <div className="p-6 text-gray-900">
-                            <h3 className="text-lg font-medium mb-4">Upcoming Appointments</h3>
-                            <p className="text-gray-700">
-                                You have no appointments scheduled yet. Add one from the{' '}
-                                <a href="/appointments" className="text-blue-600 hover:underline">
-                                    Appointments
-                                </a>{' '}
-                                page!
-                            </p>
+                            <h3 className="text-lg font-medium mb-4">Your Approved Appointments</h3>
+                            {approvedAppointments.length > 0 ? (
+                                <ul className="space-y-4">
+                                    {approvedAppointments.map((appointment) => (
+                                        <li key={appointment.id} className="border-b pb-2">
+                                            <p>
+                                                <strong>With:</strong> {appointment.with_user?.name || appointment.user?.name} <br />
+                                                <strong>Time:</strong> {new Date(appointment.appointment_time).toLocaleString()} <br />
+                                                <strong>Description:</strong> {appointment.description || 'N/A'}
+                                            </p>
+                                        </li>
+                                    ))}
+                                </ul>
+                            ) : (
+                                <p>No approved appointments yet. Request one from the{' '}
+                                    <a href="/appointments" className="text-blue-600 hover:underline">Appointments</a> page!
+                                </p>
+                            )}
                         </div>
                     </div>
                 </div>

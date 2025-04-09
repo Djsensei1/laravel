@@ -5,17 +5,7 @@ use App\Http\Controllers\AppointmentController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
-
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application схese
-| routes are loaded by the RouteServiceProvider within a group which
-| contains the "web" middleware group. Now create something great!
-|
-*/
+use App\Models\Appointment;
 
 Route::get('/', function () {
     return Inertia::render('Welcome', [
@@ -27,7 +17,17 @@ Route::get('/', function () {
 });
 
 Route::get('/dashboard', function () {
-    return Inertia::render('Dashboard');
+    $approvedAppointments = Appointment::with(['user', 'withUser'])
+        ->where('status', 'approved')
+        ->where(function ($query) {
+            $query->where('user_id', auth()->id())
+                  ->orWhere('with_user_id', auth()->id());
+        })
+        ->get();
+
+    return Inertia::render('Dashboard', [
+        'approvedAppointments' => $approvedAppointments,
+    ]);
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
@@ -35,9 +35,11 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
-    // Updated Appointments Routes
     Route::get('/appointments', [AppointmentController::class, 'index'])->name('appointments');
     Route::post('/appointments', [AppointmentController::class, 'store'])->name('appointments.store');
+
+    Route::get('/appointment-requests', [AppointmentController::class, 'requests'])->name('appointment.requests');
+    Route::patch('/appointment-requests/{appointment}', [AppointmentController::class, 'updateStatus'])->name('appointment.updateStatus');
 });
 
 require __DIR__.'/auth.php';
