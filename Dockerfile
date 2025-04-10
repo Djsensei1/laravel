@@ -23,7 +23,7 @@ RUN composer install --no-dev --optimize-autoloader
 RUN npm install && npm run build
 
 # Generate Laravel application key
-RUN php artisan key:generate
+# RUN php artisan key:generate
 
 # Set correct permissions
 RUN chown -R www-data:www-data /var/www && chmod -R 755 /var/www
