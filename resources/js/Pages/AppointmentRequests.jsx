@@ -4,12 +4,20 @@ import { Head, useForm } from '@inertiajs/react';
 export default function AppointmentRequests(props) {
     const { auth, requestedByMe, requestedWithMe } = props;
 
-    const { patch, processing } = useForm();
+    const { data, setData, patch, processing, errors } = useForm({
+        status: '',
+    });
 
     const handleStatusUpdate = (appointmentId, status) => {
+        setData('status', status);
         patch(route('appointment.updateStatus', appointmentId), {
             data: { status },
-            onSuccess: () => console.log('Status updated'),
+            onSuccess: () => {
+                console.log('Status updated successfully');
+            },
+            onError: (err) => {
+                console.error('Error updating status:', err);
+            },
         });
     };
 
@@ -23,7 +31,6 @@ export default function AppointmentRequests(props) {
 
             <div className="py-12">
                 <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
-                    {/* Requested By Me */}
                     <div className="bg-white overflow-hidden shadow-sm sm:rounded-lg mb-6">
                         <div className="p-6 text-gray-900">
                             <h3 className="text-lg font-medium mb-4">Appointments I Requested</h3>
@@ -46,7 +53,6 @@ export default function AppointmentRequests(props) {
                         </div>
                     </div>
 
-                    {/* Requested With Me */}
                     <div className="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                         <div className="p-6 text-gray-900">
                             <h3 className="text-lg font-medium mb-4">Appointments Requested With Me</h3>

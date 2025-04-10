@@ -76,12 +76,11 @@ class AppointmentController extends Controller
             Mail::to($appointment->withUser->email)->send(new AppointmentStatusUpdated($appointment));
             return redirect()->route('dashboard')->with('message', 'Appointment approved and added to your dashboard!');
         } else {
-            // Reject: Notify users, then delete
-            $appointment->update(['status' => 'rejected']); // Update status for email context
+            // Reject: Update status to rejected (no deletion)
+            $appointment->update(['status' => 'rejected']);
             Mail::to($appointment->user->email)->send(new AppointmentStatusUpdated($appointment));
             Mail::to($appointment->withUser->email)->send(new AppointmentStatusUpdated($appointment));
-            $appointment->delete();
-            return redirect()->route('appointment.requests')->with('message', 'Appointment rejected and removed.');
+            return redirect()->route('appointment.requests')->with('message', 'Appointment rejected.');
         }
     }
 }
